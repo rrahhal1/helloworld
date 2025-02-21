@@ -1,6 +1,6 @@
 resources:
 - argocd.yaml
-- argocd-petclinic-project.yaml
+- argocd-helloworld-project.yaml
 - argocd-app-dev.yaml
 - argocd-app-stage.yaml
 
