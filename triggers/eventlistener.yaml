@@ -6,7 +6,7 @@ metadata:
 spec:
   serviceAccountName: pipeline
   triggers:
-    - name: petclinic-webhook
+    - name: helloworld-webhook
       interceptors:
         - name: "add short sha"
           ref:
@@ -21,7 +21,7 @@ spec:
       bindings:
         - ref: gogs-triggerbinding
       template:
-        ref: petclinic-trigger-template
+        ref: helloworld-trigger-template
 ---
 apiVersion: route.openshift.io/v1
 kind: Route
