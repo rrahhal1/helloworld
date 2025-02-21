@@ -2,7 +2,7 @@
 
 set -e -u -o pipefail
 declare -r SCRIPT_DIR=$(cd -P $(dirname $0) && pwd)
-declare PRJ_PREFIX="demo"
+declare PRJ_PREFIX="demo1"
 declare COMMAND="help"
 
 valid_command() {
@@ -153,13 +153,13 @@ command.install() {
   git config user.email "openshift-pipelines@redhat.com"
   git config user.name "openshift-pipelines"
   cat .tekton/build.yaml | grep -A 2 GIT_REPOSITORY
-  cross_sed "s#https://github.com/siamaksade/helloworld-config#https://$GITEA_HOSTNAME/gitea/helloworld-config#g" .tekton/build.yaml
+  cross_sed "s#https://github.com/rrahhal1/helloworld-config#https://$GITEA_HOSTNAME/gitea/helloworld-config#g" .tekton/build.yaml
   cat .tekton/build.yaml | grep -A 2 GIT_REPOSITORY
   git status
   git add .tekton/build.yaml
   git commit -m "Updated manifests git url"
   git remote add auth-origin https://gitea:openshift@$GITEA_HOSTNAME/gitea/helloworld
-  git push auth-origin cicd-demo
+  git push auth-origin cicd-demo1
   popd
 
   info "Configuring pipelines-as-code"
@@ -282,7 +282,7 @@ command.start() {
   git add readme.md
   git commit -m "Updated readme.md"
   git remote add auth-origin https://gitea:openshift@$GITEA_HOSTNAME/gitea/helloworld
-  git push auth-origin cicd-demo
+  git push auth-origin cicd-demo1
   popd
 }
 
