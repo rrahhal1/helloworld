@@ -4,7 +4,7 @@ metadata:
   name: stage-helloworld
 spec:
   destination:
-    namespace: demo-stage
+    namespace: demo1-stage
     server: https://kubernetes.default.svc
   project: helloworld
   source:
