@@ -79,3 +79,4 @@ data:
     [webhook]
     ; Allow insecure certification
     SKIP_TLS_VERIFY = true
+    ALLOWED_HOST_LIST = *
