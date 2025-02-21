@@ -3,6 +3,15 @@ kind: TaskRun
 metadata:
   generateName: init-gitea-
 spec:
+  workspaces:
+    - name: workspace
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
   taskSpec:
     params:
     - name: GITEA_USER
@@ -40,6 +49,9 @@ spec:
           gitea_pwd = "$(params.GITEA_PASSWORD)"
           giteaURL = "$(params.GITEA_URL)"
           webhookURL = "$(params.WEBHOOK_URL)"
+          workspace_path = "$(workspaces.workspace.path)"  # Get dynamic workspace path
+
+          print(f"Workspace path: {workspace_path}")
 
           # create admin user
           data_user = {
@@ -57,7 +69,7 @@ spec:
           else:
             print("Created admin user {}:{}".format(gitea_user, gitea_pwd))
 
-          # create git repo spring-petclinic
+          # create git repo helloworld
           data_repo = '{"clone_addr": "https://github.com/rrahhal1/helloworld-pac", "uid": 1, "repo_name": "helloworld"}'
           headers = {'Content-Type': 'application/json'}
           resp = requests.post(url = giteaURL + "/api/v1/repos/migrate", headers = headers, auth = (gitea_user, gitea_pwd), data = data_repo)  
@@ -68,7 +80,7 @@ spec:
           else:
             print("Created git repo spring-petclinic")
 
-          # set default branch on spring-petclinic git repo 
+          # set default branch on helloworld git repo
           data_branch = '{"default_branch": "cicd-demo1"}'
           headers = {'Content-Type': 'application/json'}
           resp = requests.patch(url = giteaURL + "/api/v1/repos/" + gitea_user + "/helloworld", 
@@ -82,8 +94,7 @@ spec:
           else:
             print("Set default branch to 'cicd-demo1'")
 
-
-          # configure webhook on spring-petclinic
+          # configure webhook on helloworld repo
           data_webhook = '{"type": "gitea", "config": { "url": "' + webhookURL + '", "content_type": "json"}, "events": ["push", "pull_request", "issue_comment"], "active": true}'
           headers = {'Content-Type': 'application/json'}
           resp = requests.post(url = giteaURL + "/api/v1/repos/" + gitea_user + "/helloworld/hooks", 
@@ -97,7 +108,7 @@ spec:
           else:
             print("Configured webhook: " + webhookURL)
 
-          # create git repo spring-petclinic-config
+          # create git repo helloworld-config
           data_repo = '{"clone_addr": "https://github.com/rrahhal1/helloworld-config.git", "uid": 1, "repo_name": "helloworld-config"}'
           headers = {'Content-Type': 'application/json'}
           resp = requests.post(url = giteaURL + "/api/v1/repos/migrate", headers = headers, auth = (gitea_user, gitea_pwd), data = data_repo)  
@@ -117,3 +128,9 @@ spec:
           print("## Token: " + gitea_token + " ##")
 
           os.popen('oc create secret generic gitea --from-literal=token=' + gitea_token + ' --from-literal=webhook=""')
+
+          # Optional: Save data to workspace
+          settings_file = os.path.join(workspace_path, 'settings.xml')
+          with open(settings_file, 'w') as file:
+              file.write("Gitea configuration settings go here")
+              print(f"Saved settings to {settings_file}")
