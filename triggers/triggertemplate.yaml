@@ -2,7 +2,7 @@
 apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerTemplate
 metadata:
-  name: petclinic-trigger-template
+  name: helloworld-trigger-template
 spec:
   params:
   - name: gitrevision
@@ -25,13 +25,13 @@ spec:
   - apiVersion: tekton.dev/v1beta1
     kind: PipelineRun
     metadata:
-      generateName: petclinic-build-
-      # name: petclinic-dev-$(tt.params.gitbranchname)-$(tt.params.gitshortsha)
+      generateName: helloworld-build-
+      # name: helloworld-dev-$(tt.params.gitbranchname)-$(tt.params.gitshortsha)
       labels:
-        tekton.dev/pipeline: petclinic-build
+        tekton.dev/pipeline: helloworld-build
     spec:
       pipelineRef:
-        name: petclinic-build
+        name: helloworld-build
       params:
         - name: APP_SOURCE_GIT
           value: $(tt.params.gitrepositoryurl)
