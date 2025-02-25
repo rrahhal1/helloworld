@@ -3,7 +3,6 @@ resources:
 - argocd-helloworld-project.yaml
 - argocd-app-dev.yaml
 - argocd-app-stage.yaml
-- argocd-app-prod.yaml
 
 patchesStrategicMerge:
 - tmp-argocd-app-patch.yaml
