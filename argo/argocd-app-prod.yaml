@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prod-helloworld
+spec:
+  destination:
+    namespace: demo1-prod
+    server: https://kubernetes.default.svc
+  project: helloworld
+  source:
+    path: environments/prod
+    repoURL: https://github.com/rrahhal1/helloworld-config
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
